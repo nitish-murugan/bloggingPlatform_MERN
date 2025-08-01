@@ -15,7 +15,7 @@ const Register = ({ onNavigate }) => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // 'success' or 'error'
+  const [messageType, setMessageType] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +24,6 @@ const Register = ({ onNavigate }) => {
       [name]: value
     }));
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -32,7 +31,6 @@ const Register = ({ onNavigate }) => {
       }));
     }
     
-    // Clear any success/error messages when user starts typing
     if (message) {
       setMessage("");
     }
@@ -41,14 +39,12 @@ const Register = ({ onNavigate }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Username validation
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     } else if (formData.username.length < 3) {
       newErrors.username = 'Username must be at least 3 characters';
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
@@ -56,24 +52,20 @@ const Register = ({ onNavigate }) => {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    // First name validation
     if (!formData.firstName.trim()) {
       newErrors.firstName = 'First name is required';
     }
 
-    // Last name validation
     if (!formData.lastName.trim()) {
       newErrors.lastName = 'Last name is required';
     }
 
-    // Password validation
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
 
-    // Re-password validation
     if (!formData.rePassword) {
       newErrors.rePassword = 'Please confirm your password';
     } else if (formData.password !== formData.rePassword) {
@@ -92,8 +84,8 @@ const Register = ({ onNavigate }) => {
     }
 
     setIsLoading(true);
-    setMessage(""); // Clear any previous messages
-    setErrors({}); // Clear any previous errors
+    setMessage(""); 
+    setErrors({}); 
     
     try {
       const response = await axios.post("http://localhost:5000/auth/register", {
@@ -107,7 +99,6 @@ const Register = ({ onNavigate }) => {
       setMessage("Registration successful! Welcome to OneCredit!");
       setMessageType("success");
       
-      // Optional: Store token or user data if returned
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
       }
@@ -115,7 +106,6 @@ const Register = ({ onNavigate }) => {
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
       
-      // Clear form after successful registration
       setFormData({
         username: '',
         email: '',

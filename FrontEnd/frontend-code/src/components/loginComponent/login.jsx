@@ -8,7 +8,7 @@ function LoginComponent({ onNavigate }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // 'success' or 'error'
+  const [messageType, setMessageType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -24,13 +24,16 @@ function LoginComponent({ onNavigate }) {
       setMessage("Login successful! Welcome back!");
       setMessageType("success");
       
-      // Optional: Store token or user data if returned
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
       }
       if (response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
+      
+      setTimeout(() => {
+        onNavigate('admin');
+      }, 1500);
       
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed. Please try again.");

@@ -10,19 +10,35 @@ const NavBar = ({ currentPage, onNavigate }) => {
         </div>
         <div className={styles.navLinks}>
           {currentPage === 'login' ? (
-            <button 
-              className={styles.navLink}
-              onClick={() => onNavigate('register')}
-            >
-              Create Account
-            </button>
+            <>
+              <button 
+                className={styles.navLink}
+                onClick={() => onNavigate('register')}
+              >
+                Create Account
+              </button>
+              <button 
+                className={styles.navLink}
+                onClick={() => onNavigate('admin')}
+              >
+                Admin Panel
+              </button>
+            </>
           ) : (
-            <button 
-              className={styles.navLink}
-              onClick={() => onNavigate('login')}
-            >
-              Already have an account?
-            </button>
+            <>
+              <button 
+                className={styles.navLink}
+                onClick={() => onNavigate('login')}
+              >
+                Already have an account?
+              </button>
+              <button 
+                className={styles.navLink}
+                onClick={() => onNavigate('admin')}
+              >
+                Admin Panel
+              </button>
+            </>
           )}
         </div>
       </div>
