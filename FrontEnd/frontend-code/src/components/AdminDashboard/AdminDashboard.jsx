@@ -28,7 +28,8 @@ const AdminDashboard = ({ onNavigate }) => {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      setStats(response.data);
+      setStats(response.data.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching stats:', error);
       setStats({
