@@ -66,6 +66,33 @@
   transform: translateY(1px);
 }
 
+.welcomeText {
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.logoutButton {
+  background: #dc3545;
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.logoutButton:hover {
+  background: #c82333;
+}
+
+.logoutButton:active {
+  transform: translateY(1px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .navContainer {

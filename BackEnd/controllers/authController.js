@@ -7,6 +7,7 @@ const loginFn = async (request, response)=>{
         const {email, password} = request.body;
         const isUser = await userObj.findOne({email: email});
         if(!isUser){
+            console.log("Error 1");
             return response.status(404).json({
                 success: false,
                 message: "User not found with the email"
@@ -15,6 +16,7 @@ const loginFn = async (request, response)=>{
 
         const isPassword = await bcryptjs.compare(password,isUser.password);
         if(!isPassword){
+            console.log("Error 2");
             return response.status(401).json({
                 success: false,
                 message: "Invalid password"
@@ -29,6 +31,8 @@ const loginFn = async (request, response)=>{
         }, process.env.JWT_PRIVATE_KEY,{
             "expiresIn": "10m"
         });
+
+        console.log("Sucess 1");
 
         return response.status(200).json({
             success: true,
