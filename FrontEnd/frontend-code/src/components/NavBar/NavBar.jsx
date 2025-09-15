@@ -58,12 +58,13 @@ const NavBar = ({ currentPage, onNavigate }) => {
               <span className={styles.welcomeText}>
                 Welcome, {user?.username || 'User'}!
               </span>
-              {user?.role === 'admin' && currentPage !== 'admin' && (
+              
+              {user?.role === 'superadmin' && currentPage !== 'superadmin' && (
                 <button 
-                  className={styles.navLink}
-                  onClick={() => onNavigate('admin')}
+                  className={`${styles.navLink} ${styles.superAdminLink}`}
+                  onClick={() => onNavigate('superadmin')}
                 >
-                  Admin Panel
+                  ⚡ Super Admin
                 </button>
               )}
               {currentPage !== 'blog' && (
@@ -72,6 +73,14 @@ const NavBar = ({ currentPage, onNavigate }) => {
                   onClick={() => onNavigate('blog')}
                 >
                   View Blog
+                </button>
+              )}
+              {currentPage !== 'profile' && (
+                <button 
+                  className={styles.navLink}
+                  onClick={() => onNavigate('profile')}
+                >
+                  My Profile
                 </button>
               )}
               <button 

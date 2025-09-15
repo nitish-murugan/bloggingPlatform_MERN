@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import styles from './PostManagement.module.css';
 
 const PostManagement = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedPost, setSelectedPost] = useState(null);
@@ -16,7 +18,7 @@ const PostManagement = () => {
     category: ''
   });
 
-  useEffect(() => {
+  const loadMockPosts = useCallback(() => {
     const mockPosts = [
       {
         id: 1,
@@ -92,6 +94,44 @@ const PostManagement = () => {
     setPosts(mockPosts);
   }, []);
 
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      console.log('Fetching posts with token:', token ? 'Token exists' : 'No token');
+      
+      try {
+        const response = await axios.get('http://localhost:5000/api/posts', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        
+        console.log('API Response:', response.data);
+        
+        if (response.data.success) {
+          console.log('Posts from API:', response.data.posts);
+          setPosts(response.data.posts);
+        } else {
+          console.error('Failed to fetch posts:', response.data.message);
+          loadMockPosts();
+        }
+      } catch (apiError) {
+        console.log('Backend not available, using mock data. Error:', apiError.message);
+        loadMockPosts();
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      loadMockPosts();
+    } finally {
+      setLoading(false);
+    }
+  }, [loadMockPosts]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -164,53 +204,62 @@ const PostManagement = () => {
         <p>Manage blog posts, edit content, and monitor engagement</p>
       </div>
 
-      <div className={styles.controls}>
-        <div className={styles.searchContainer}>
-          <input
-            type="text"
-            placeholder="Search posts by title, author, or category..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
-          />
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Loading posts...</p>
         </div>
-        
-        <div className={styles.filterContainer}>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">All Posts</option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
-            <option value="archived">Archived</option>
-          </select>
-        </div>
+      ) : (
+        <>
+          <div className={styles.controls}>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="Search posts by title, author, or category..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
+            
+            <div className={styles.filterContainer}>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className={styles.filterSelect}
+              >
+                <option value="all">All Posts</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
 
-        <button className={styles.addPostBtn}>
-          ➕ Add New Post
-        </button>
-      </div>
+            <button className={styles.addPostBtn}>
+              ➕ Add New Post
+            </button>
+          </div>
 
-      <div className={styles.statsOverview}>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>{posts.length}</span>
-          <span className={styles.statLabel}>Total Posts</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>{posts.filter(p => p.status === 'published').length}</span>
-          <span className={styles.statLabel}>Published</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>{posts.filter(p => p.status === 'draft').length}</span>
-          <span className={styles.statLabel}>Drafts</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>{posts.reduce((sum, p) => sum + p.views, 0)}</span>
-          <span className={styles.statLabel}>Total Views</span>
-        </div>
-      </div>
+          <div className={styles.statsOverview}>
+            <div className={styles.statItem}>
+              <span className={styles.statNumber}>{posts.length}</span>
+              <span className={styles.statLabel}>Total Posts</span>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.statNumber}>{posts.filter(p => p.status === 'published').length}</span>
+              <span className={styles.statLabel}>Published</span>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.statNumber}>{posts.filter(p => p.status === 'draft').length}</span>
+              <span className={styles.statLabel}>Drafts</span>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.statNumber}>{posts.reduce((sum, p) => sum + p.views, 0)}</span>
+              <span className={styles.statLabel}>Total Views</span>
+            </div>
+          </div>
+        </>
+      )}
 
       <div className={styles.tableContainer}>
         <table className={styles.postsTable}>

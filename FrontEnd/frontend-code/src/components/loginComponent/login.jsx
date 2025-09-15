@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import GoogleSignIn from "../GoogleSignIn/GoogleSignIn";
 import style from "./login.module.css";
 
 function LoginComponent({ onNavigate }) {
@@ -16,7 +17,7 @@ function LoginComponent({ onNavigate }) {
     
     try {
       try {
-        const response = await axios.post("http://localhost:5000/auth/login", {
+        const response = await axios.post("http://localhost:5000/api/auth/login", {
           email,
           password,
         });
@@ -37,12 +38,11 @@ function LoginComponent({ onNavigate }) {
           } else {
             onNavigate('blog');
           }
-        }, 1500);
+        }, 1000);
         
       } catch {
         console.log('Backend not available, using mock authentication');
         
-        // Mock authentication when backend is unavailable
         const mockUser = {
           id: 1,
           username: email.split('@')[0],
@@ -64,7 +64,7 @@ function LoginComponent({ onNavigate }) {
           } else {
             onNavigate('blog');
           }
-        }, 1500);
+        }, 1000);
       }
       
     } catch (err) {
@@ -101,6 +101,9 @@ function LoginComponent({ onNavigate }) {
               {isLoading ? "Signing In..." : "Sign In"}
             </button>
           </form>
+          
+          <GoogleSignIn onNavigate={onNavigate} />
+          
           {message && (
             <p className={`${style.message} ${messageType === 'error' ? style.error : style.success}`}>
               {message}
@@ -125,9 +128,9 @@ function LoginComponent({ onNavigate }) {
       <div className={style.rightSection}>
         <div className={style.imageContainer}>
           <div className={style.imageContent}>
-            <h1 className={style.imageTitle}>Welcome to OneCredit</h1>
+            <h1 className={style.imageTitle}>Welcome to Blogging Platform</h1>
             <p className={style.imageSubtitle}>
-              Manage your finances with confidence. Track expenses, monitor credit, and achieve your financial goals with our comprehensive platform.
+              Welcome to your personal space to share thoughts, stories, and passions with the world. Create, connect, and grow your voice easily with our powerful and user-friendly blogging platform
             </p>
           </div>
         </div>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import LoginComponent from "./components/loginComponent/login";
 import Register from "./components/registerComponent/register";
-import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
+import SuperAdmin from "./components/superAdmin/SuperAdmin";
 import BlogViewer from "./components/BlogViewer/BlogViewer";
+import BlogPost from "./components/BlogPost/BlogPost";
+import UserProfile from "./components/UserProfile/UserProfile";
 import NavBar from "./components/NavBar/NavBar";
 
 function App() {
@@ -18,10 +20,14 @@ function App() {
         return <LoginComponent onNavigate={handleNavigate} />;
       case 'register':
         return <Register onNavigate={handleNavigate} />;
-      case 'admin':
-        return <AdminDashboard onNavigate={handleNavigate} />;
+      case 'superadmin':
+        return <SuperAdmin onNavigate={handleNavigate} />;
       case 'blog':
         return <BlogViewer onNavigate={handleNavigate} />;
+      case 'create-post':
+        return <BlogPost onNavigate={handleNavigate} />;
+      case 'profile':
+        return <UserProfile showStats={true} />;
       default:
         return <LoginComponent onNavigate={handleNavigate} />;
     }

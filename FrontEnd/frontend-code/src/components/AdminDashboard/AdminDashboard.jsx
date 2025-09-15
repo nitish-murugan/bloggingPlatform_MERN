@@ -5,6 +5,8 @@ import styles from './AdminDashboard.module.css';
 import UserManagement from '../UserManagement/UserManagement';
 import PostManagement from '../PostManagement/PostManagement';
 import Statistics from '../Statistics/Statistics';
+import LoginTracker from '../LoginTracker/LoginTracker';
+import UserProfile from '../UserProfile/UserProfile';
 
 const AdminDashboard = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -57,6 +59,10 @@ const AdminDashboard = ({ onNavigate }) => {
         return <PostManagement />;
       case 'statistics':
         return <Statistics />;
+      case 'login-tracker':
+        return <LoginTracker />;
+      case 'profile':
+        return <UserProfile showStats={true} />;
       default:
         return (
           <div className={styles.dashboardOverview}>
@@ -106,6 +112,12 @@ const AdminDashboard = ({ onNavigate }) => {
                   onClick={() => setActiveTab('posts')}
                 >
                   Manage Posts
+                </button>
+                <button 
+                  className={styles.actionBtn}
+                  onClick={() => setActiveTab('login-tracker')}
+                >
+                  View Login Activity
                 </button>
                 <button 
                   className={styles.actionBtn}
@@ -159,6 +171,22 @@ const AdminDashboard = ({ onNavigate }) => {
           >
             <span className={styles.navIcon}>📊</span>
             Statistics
+          </button>
+          
+          <button
+            className={`${styles.navItem} ${activeTab === 'login-tracker' ? styles.active : ''}`}
+            onClick={() => setActiveTab('login-tracker')}
+          >
+            <span className={styles.navIcon}>📈</span>
+            Login Tracker
+          </button>
+          
+          <button
+            className={`${styles.navItem} ${activeTab === 'profile' ? styles.active : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            <span className={styles.navIcon}>👤</span>
+            My Profile
           </button>
         </nav>
         

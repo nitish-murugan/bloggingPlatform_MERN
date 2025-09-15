@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import PostComments from '../PostComments/PostComments';
 import styles from './BlogViewer.module.css';
 
 const BlogViewer = ({ onNavigate }) => {
@@ -189,12 +190,20 @@ const BlogViewer = ({ onNavigate }) => {
         <div className={styles.headerContent}>
           <h1>Recent Blog Posts</h1>
           <p>Discover the latest insights and stories from our community</p>
-          <button 
-            className={styles.backBtn}
-            onClick={() => onNavigate('login')}
-          >
-            ← Back to Login
-          </button>
+          <div className={styles.headerActions}>
+            <button 
+              className={styles.createPostBtn}
+              onClick={() => onNavigate('create-post')}
+            >
+              + Create New Post
+            </button>
+            <button 
+              className={styles.backBtn}
+              onClick={() => onNavigate('login')}
+            >
+              ← Back to Login
+            </button>
+          </div>
         </div>
       </header>
 
@@ -301,7 +310,7 @@ const BlogViewer = ({ onNavigate }) => {
             <div className={styles.modalFooter}>
               <div className={styles.modalStats}>
                 <span>👁️ {selectedPost.views} views</span>
-                <span>💬 {selectedPost.comments} comments</span>
+                <span>💬 {selectedPost.commentCount || selectedPost.comments || 0} comments</span>
                 <span>❤️ {selectedPost.likes} likes</span>
               </div>
               <button 
@@ -311,6 +320,25 @@ const BlogViewer = ({ onNavigate }) => {
                 ❤️ Like
               </button>
             </div>
+
+            <PostComments 
+              postId={selectedPost.id || selectedPost._id} 
+              commentCount={selectedPost.commentCount || selectedPost.comments || 0}
+              onCommentCountChange={(newCount) => {
+                setSelectedPost(prev => ({
+                  ...prev,
+                  commentCount: newCount,
+                  comments: newCount
+                }));
+                setPosts(prevPosts => 
+                  prevPosts.map(post => 
+                    (post.id || post._id) === (selectedPost.id || selectedPost._id) 
+                      ? { ...post, commentCount: newCount, comments: newCount }
+                      : post
+                  )
+                );
+              }}
+            />
           </div>
         </div>
       )}

@@ -3,7 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./database/db');
 const authRoute = require('./routes/authRoutes');
-const statisticsRoute = require('./routes/adminRouter')
+const statisticsRoute = require('./routes/adminRouter');
+const postRoute = require('./routes/postRoutes');
+const commentRoute = require('./routes/commentRoutes');
+const superAdminRoute = require('./routes/superAdminRoutes');
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -18,6 +21,9 @@ app.use(cors({
 app.use(express.json());
 app.use('/api/auth', authRoute);
 app.use('/api/admin', statisticsRoute);
+app.use('/api/posts', postRoute);
+app.use('/api/comments', commentRoute);
+app.use('/api/superadmin', superAdminRoute);
 
 connectDB();
 app.listen(PORT, ()=>{

@@ -1,6 +1,9 @@
 const userObj = require('../model/User');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const loginFn = async (request, response)=>{
     try{
@@ -27,22 +30,37 @@ const loginFn = async (request, response)=>{
             username: isUser.username,
             email: isUser.email,
             firstName: isUser.firstName,
-            lastName: isUser.lastName
+            lastName: isUser.lastName,
+            role: isUser.role,
+            id: isUser._id
         }, process.env.JWT_PRIVATE_KEY,{
             "expiresIn": "10m"
         });
 
-        console.log("Sucess 1");
+        const updatedUser = await userObj.findByIdAndUpdate(isUser._id, {
+            $inc: { loginCount: 1 },
+            lastLoginDate: new Date(),
+            isOnline: true,
+            lastActivityDate: new Date()
+        }, { new: true });
+
+        console.log("Success 1");
 
         return response.status(200).json({
             success: true,
             message: "User logged in successfully",
             token: accessToken,
             user: {
-                username: isUser.username,
-                email: isUser.email,
-                firstName: isUser.firstName,
-                lastName: isUser.lastName
+                id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName,
+                role: updatedUser.role,
+                status: updatedUser.status,
+                loginCount: updatedUser.loginCount,
+                lastLoginDate: updatedUser.lastLoginDate,
+                createdAt: updatedUser.createdAt
             }
         });
 
@@ -76,7 +94,6 @@ const registerFn = async (request, response)=>{
             password: hashedPassword
         });
         
-        // Generate token for the new user
         const accessToken = jwt.sign({
             username: addedUser.username,
             email: addedUser.email,
@@ -107,4 +124,94 @@ const registerFn = async (request, response)=>{
     }
 }
 
-module.exports = {loginFn, registerFn};
+const googleSignInFn = async (request, response) => {
+    try {
+        const { credential } = request.body;
+        
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        
+        const payload = ticket.getPayload();
+        const { sub: googleId, email, name, given_name: firstName, family_name: lastName, picture } = payload;
+        
+        let user = await userObj.findOne({ 
+            $or: [
+                { email: email },
+                { googleId: googleId }
+            ]
+        });
+        
+        if (user) {
+            if (!user.googleId) {
+                user.googleId = googleId;
+                user.profilePicture = picture;
+                await user.save();
+            }
+            
+            user = await userObj.findByIdAndUpdate(user._id, {
+                $inc: { loginCount: 1 },
+                lastLoginDate: new Date(),
+                isOnline: true,
+                lastActivityDate: new Date()
+            }, { new: true });
+            
+        } else {
+            user = await userObj.create({
+                username: email.split('@')[0],
+                firstName: firstName || name.split(' ')[0] || 'User',
+                lastName: lastName || name.split(' ').slice(1).join(' ') || '',
+                email: email,
+                googleId: googleId,
+                profilePicture: picture,
+                role: 'user',
+                status: 'active',
+                loginCount: 1,
+                lastLoginDate: new Date(),
+                isOnline: true,
+                lastActivityDate: new Date(),
+                createdAt: new Date()
+            });
+        }
+        
+        const accessToken = jwt.sign({
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+            id: user._id
+        }, process.env.JWT_PRIVATE_KEY, {
+            "expiresIn": "10m"
+        });
+        
+        return response.status(200).json({
+            success: true,
+            message: "Google sign-in successful",
+            token: accessToken,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+                status: user.status,
+                profilePicture: user.profilePicture,
+                loginCount: user.loginCount,
+                lastLoginDate: user.lastLoginDate,
+                createdAt: user.createdAt
+            }
+        });
+        
+    } catch (error) {
+        console.log(`Error in Google sign-in: ${error}`);
+        return response.status(401).json({
+            success: false,
+            message: "Invalid Google credential"
+        });
+    }
+};
+
+module.exports = {loginFn, registerFn, googleSignInFn};
