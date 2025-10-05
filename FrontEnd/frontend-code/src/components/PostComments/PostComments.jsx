@@ -56,13 +56,17 @@ const PostComments = ({ postId, commentCount, onCommentCountChange }) => {
 
       if (response.data.success) {
         setNewComment('');
-        fetchComments();
+        // Add the new comment to the existing comments array immediately
+        const newCommentData = response.data.comment;
+        setComments(prevComments => [newCommentData, ...prevComments]);
         if (onCommentCountChange) {
           onCommentCountChange(commentCount + 1);
         }
       }
     } catch (error) {
       console.error('Error posting comment:', error);
+      // If there's an error, refetch to ensure consistency
+      fetchComments();
     } finally {
       setIsSubmitting(false);
     }
@@ -93,6 +97,7 @@ const PostComments = ({ postId, commentCount, onCommentCountChange }) => {
       if (response.data.success) {
         setReplyContent('');
         setReplyingTo(null);
+        // Refetch comments to get the updated replies structure
         fetchComments();
       }
     } catch (error) {
@@ -145,7 +150,12 @@ const PostComments = ({ postId, commentCount, onCommentCountChange }) => {
     <div className={`${styles.comment} ${isReply ? styles.reply : ''}`}>
       <div className={styles.commentHeader}>
         <div className={styles.authorInfo}>
-          <span className={styles.authorName}>{comment.authorName}</span>
+          <span className={styles.authorName}>
+            {comment.authorName || 
+             (comment.authorId && comment.authorId.firstName && comment.authorId.lastName 
+              ? `${comment.authorId.firstName} ${comment.authorId.lastName}` 
+              : comment.authorId?.username || 'Anonymous')}
+          </span>
           <span className={styles.commentDate}>{formatDate(comment.createdAt)}</span>
           {comment.isEdited && <span className={styles.edited}>(edited)</span>}
         </div>

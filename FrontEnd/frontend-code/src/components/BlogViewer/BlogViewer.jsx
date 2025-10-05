@@ -146,9 +146,9 @@ const BlogViewer = ({ onNavigate }) => {
 
   const filteredPosts = posts.filter(post => {
     const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (post.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (post.excerpt || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (post.author || '').toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 

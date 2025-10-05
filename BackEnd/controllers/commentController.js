@@ -7,7 +7,7 @@ const createComment = async (req, res) => {
         const { postId, content, parentComment } = req.body;
         const userId = req.user.id;
         const userEmail = req.user.email;
-        const userName = req.user.firstName + ' ' + req.user.lastName;
+        const userName = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim() || req.user.username || 'Anonymous';
 
         if (!postId || !content) {
             return res.status(400).json({
