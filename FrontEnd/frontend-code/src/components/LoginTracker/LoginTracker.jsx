@@ -37,7 +37,7 @@ const LoginTracker = () => {
       
       try {
         // Fetch login statistics from backend
-        const response = await axios.get('http://localhost:5000/api/admin/login-stats', {
+        const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/admin/login-stats', {
           headers: {
             Authorization: `Bearer ${token}`
           }

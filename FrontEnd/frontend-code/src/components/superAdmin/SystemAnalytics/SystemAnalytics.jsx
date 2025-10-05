@@ -37,7 +37,7 @@ const SystemAnalytics = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/api/superadmin/analytics?range=${timeRange}`, {
+        const response = await axios.get(`https://bloggingplatform-mern.onrender.com/api/superadmin/analytics?range=${timeRange}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAnalytics(response.data);

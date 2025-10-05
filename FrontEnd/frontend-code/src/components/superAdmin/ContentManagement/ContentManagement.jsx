@@ -21,12 +21,12 @@ const ContentManagement = () => {
         const token = localStorage.getItem('token');
         
         if (activeTab === 'posts') {
-          const response = await axios.get('http://localhost:5000/api/superadmin/posts', {
+          const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/superadmin/posts', {
             headers: { Authorization: `Bearer ${token}` }
           });
           setPosts(response.data.posts);
         } else {
-          const response = await axios.get('http://localhost:5000/api/superadmin/comments', {
+          const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/superadmin/comments', {
             headers: { Authorization: `Bearer ${token}` }
           });
           setComments(response.data.comments);
@@ -141,7 +141,7 @@ const ContentManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/superadmin/bulk-action', {
+      await axios.post('https://bloggingplatform-mern.onrender.com/api/superadmin/bulk-action', {
         type: activeTab,
         action,
         items: selectedItems

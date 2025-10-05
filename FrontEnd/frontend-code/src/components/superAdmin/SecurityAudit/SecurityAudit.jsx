@@ -21,17 +21,17 @@ const SecurityAudit = () => {
       try {
         const token = localStorage.getItem('token');
         
-        const logsResponse = await axios.get(`http://localhost:5000/api/superadmin/audit-logs?time=${timeFilter}`, {
+        const logsResponse = await axios.get(`https://bloggingplatform-mern.onrender.com/api/superadmin/audit-logs?time=${timeFilter}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAuditLogs(logsResponse.data.logs);
         
-        const alertsResponse = await axios.get('http://localhost:5000/api/superadmin/security-alerts', {
+        const alertsResponse = await axios.get('https://bloggingplatform-mern.onrender.com/api/superadmin/security-alerts', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSecurityAlerts(alertsResponse.data.alerts);
         
-        const securityResponse = await axios.get('http://localhost:5000/api/superadmin/security-metrics', {
+        const securityResponse = await axios.get('https://bloggingplatform-mern.onrender.com/api/superadmin/security-metrics', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSystemSecurity(securityResponse.data);
@@ -142,7 +142,7 @@ const SecurityAudit = () => {
   const handleAlertAction = async (alertId, action) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/superadmin/security-alert-action`, {
+      await axios.post(`https://bloggingplatform-mern.onrender.com/api/superadmin/security-alert-action`, {
         alertId,
         action
       }, {
@@ -169,7 +169,7 @@ const SecurityAudit = () => {
       const token = localStorage.getItem('token');
       setLoading(true);
       
-      await axios.post('http://localhost:5000/api/superadmin/security-scan', {}, {
+      await axios.post('https://bloggingplatform-mern.onrender.com/api/superadmin/security-scan', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

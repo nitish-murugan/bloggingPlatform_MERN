@@ -46,7 +46,7 @@ const BlogPost = ({ onNavigate }) => {
         authorId: user.id
       };
 
-      const response = await axios.post('http://localhost:5000/api/posts', postData, {
+      const response = await axios.post('https://bloggingplatform-mern.onrender.com/api/posts', postData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

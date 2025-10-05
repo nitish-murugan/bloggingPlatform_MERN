@@ -14,7 +14,7 @@ const PostComments = ({ postId, commentCount, onCommentCountChange }) => {
   const fetchComments = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/comments/post/${postId}`);
+      const response = await axios.get(`https://bloggingplatform-mern.onrender.com/api/comments/post/${postId}`);
       if (response.data.success) {
         setComments(response.data.comments);
       }
@@ -41,7 +41,7 @@ const PostComments = ({ postId, commentCount, onCommentCountChange }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/comments',
+        'https://bloggingplatform-mern.onrender.com/api/comments',
         {
           postId: postId,
           content: newComment.trim()
@@ -80,7 +80,7 @@ const PostComments = ({ postId, commentCount, onCommentCountChange }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/comments',
+        'https://bloggingplatform-mern.onrender.com/api/comments',
         {
           postId: postId,
           content: replyContent.trim(),
@@ -113,7 +113,7 @@ const PostComments = ({ postId, commentCount, onCommentCountChange }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:5000/api/comments/${commentId}/like`,
+        `https://bloggingplatform-mern.onrender.com/api/comments/${commentId}/like`,
         {},
         {
           headers: {

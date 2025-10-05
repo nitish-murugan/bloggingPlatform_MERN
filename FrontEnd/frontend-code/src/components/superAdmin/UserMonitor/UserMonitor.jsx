@@ -21,7 +21,7 @@ const UserMonitor = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/superadmin/users', {
+        const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/superadmin/users', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers(response.data.users);
@@ -76,7 +76,7 @@ const UserMonitor = () => {
     const fetchUserStats = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/superadmin/user-stats', {
+        const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/superadmin/user-stats', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUserStats(response.data);
@@ -108,7 +108,7 @@ const UserMonitor = () => {
   const fetchUserActivity = async (userId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/superadmin/user-activity/${userId}`, {
+      const response = await axios.get(`https://bloggingplatform-mern.onrender.com/api/superadmin/user-activity/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUserActivities(response.data.activities);
@@ -126,7 +126,7 @@ const UserMonitor = () => {
   const handleUserAction = async (userId, action) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/superadmin/user-action`, {
+      await axios.post(`https://bloggingplatform-mern.onrender.com/api/superadmin/user-action`, {
         userId,
         action
       }, {

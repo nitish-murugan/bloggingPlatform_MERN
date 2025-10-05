@@ -25,7 +25,7 @@ const AdminDashboard = ({ onNavigate }) => {
   const fetchDashboardStats = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('http://localhost:5000/api/admin/stats', {
+      const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/admin/stats', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

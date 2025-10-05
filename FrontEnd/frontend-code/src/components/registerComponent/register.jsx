@@ -88,7 +88,7 @@ const Register = ({ onNavigate }) => {
     setErrors({}); 
     
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/register", {
+      const response = await axios.post("https://bloggingplatform-mern.onrender.com/api/auth/register", {
         username: formData.username,
         email: formData.email,
         firstName: formData.firstName,

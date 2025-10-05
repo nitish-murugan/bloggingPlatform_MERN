@@ -33,7 +33,7 @@ const UserProfile = ({
       const token = localStorage.getItem('token');
       
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/profile', {
+        const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/auth/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }

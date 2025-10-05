@@ -9,7 +9,7 @@ const GoogleSignIn = ({ onNavigate }) => {
   const handleCredentialResponse = useCallback(async (response) => {
     setIsLoading(true);
     try {
-      const result = await axios.post('http://localhost:5000/api/auth/google-signin', {
+      const result = await axios.post('https://bloggingplatform-mern.onrender.com/api/auth/google-signin', {
         credential: response.credential
       });
 

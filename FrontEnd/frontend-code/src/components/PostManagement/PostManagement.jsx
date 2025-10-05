@@ -101,7 +101,7 @@ const PostManagement = () => {
       console.log('Fetching posts with token:', token ? 'Token exists' : 'No token');
       
       try {
-        const response = await axios.get('http://localhost:5000/api/posts', {
+        const response = await axios.get('https://bloggingplatform-mern.onrender.com/api/posts', {
           headers: {
             Authorization: `Bearer ${token}`
           }
