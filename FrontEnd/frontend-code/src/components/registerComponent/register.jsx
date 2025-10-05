@@ -115,8 +115,16 @@ const Register = ({ onNavigate }) => {
         rePassword: ''
       });
       
-      // Optional: Redirect to login or dashboard after successful registration
-      // setTimeout(() => onNavigate('login'), 2000);
+      // Redirect to blog after successful registration
+      setTimeout(() => {
+        if (response.data.user.role === 'admin') {
+          onNavigate('admin');
+        } else if (response.data.user.role === 'superadmin') {
+          onNavigate('superadmin');
+        } else {
+          onNavigate('blog');
+        }
+      }, 2000);
       
     } catch (error) {
       console.error('Registration error:', error);
