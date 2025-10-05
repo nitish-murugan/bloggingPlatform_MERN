@@ -11,15 +11,20 @@ const superAdminRoute = require('./routes/superAdminRoutes');
 const PORT = process.env.PORT || 5000;
 const app = express();
 
+// Enhanced CORS configuration
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://bloggingplatform-3b74.onrender.com/'
+    'https://bloggingplatform-3b74.onrender.com'  // Remove trailing slash
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200 // For legacy browser support
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 app.use('/api/auth', authRoute);
@@ -27,6 +32,11 @@ app.use('/api/admin', statisticsRoute);
 app.use('/api/posts', postRoute);
 app.use('/api/comments', commentRoute);
 app.use('/api/superadmin', superAdminRoute);
+
+// Add a test endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ message: 'Server is running', timestamp: new Date().toISOString() });
+});
 
 connectDB();
 app.listen(PORT, ()=>{

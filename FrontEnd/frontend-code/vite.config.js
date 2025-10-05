@@ -9,10 +9,15 @@ export default defineConfig({
         manualChunks: undefined,
       },
     },
+    assetsDir: 'assets',
+    sourcemap: false,
   },
   server: {
-    headers: {
-      'Content-Type': 'application/javascript',
-    },
+    port: 5173,
+    host: true,
   },
+  preview: {
+    port: 4173,
+    host: true,
+  }
 })
